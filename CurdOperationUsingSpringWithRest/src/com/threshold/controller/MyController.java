@@ -236,14 +236,17 @@ public class MyController extends BaseController{
 	 * @author SUMIT.C
 	 * @since 2019-03-07
 	 */
+	@SuppressWarnings("serial")
 	@RequestMapping(value = "/update", method = RequestMethod.POST)
 	public ResponseEntity<Object> updateUser(@RequestBody Map<String, Object> update) {
 		Map<String, Object> result = new HashMap<String, Object>();
 		boolean updateEmployee = employeeService.updateEmployeeById(update.get("name") + "", update.get("email") + "", update.get("number") + "",update.get("pkId") + "");
 		if(updateEmployee) {
 			result.put("success", true);
-			result.put("uid", update.get("pkId"));
-			result.put("message", "employee record are updated successfully");
+			result.put("data", new HashMap<String, Object>() {{
+				put("uid", update.get("pkId"));
+				put("message", "employee record are updated successfully");
+			}});
 			return new  ResponseEntity<>(result, HttpStatus.OK);
 		} else {
 			result.put("success", "false");
@@ -251,4 +254,15 @@ public class MyController extends BaseController{
 			return new ResponseEntity<>(result, HttpStatus.OK);
 		}
 	}
+	
+	
+	/*return new ResponseEntity(accessKit.request, new ZcMap(){{
+		put(SUCCESS_KEY, success);
+		put(DATA_KEY, new ZcMap() {{
+			if(res.containsKey(UID_KEY)) put(UID_KEY, res.get(UID_KEY));							
+			else if(res.containsKey(ERRORS_KEY)) put(ERRORS_KEY, res.get(ERRORS_KEY));
+		}});
+		put(MESSAGE_KEY, success ? LangMessage.get(MessageKey.Update.SUCCESS, accessKit.lang)
+					  		     : LangMessage.get(MessageKey.Update.FAIL, accessKit.lang));  
+	}});*/
 }
